@@ -68,3 +68,7 @@ gem 'enumerize'
 gem 'redis'
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
+
+gem "devise"
+gem "simple_token_authentication"
+gem 'jwt'

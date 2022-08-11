@@ -1,12 +1,19 @@
-class Api::V1::QueueJobsController < ActionController::API
+class Api::V1::QueueJobsController < Api::V1::BaseController
   before_action :find_job, only: [:queue_job_worker]
 
+  # desc                  Get all the generated Queus from DB
+  # route                 GET /api/v1/queue_jobs
+  # Access                Public
   def index
     @queue_jobs = QueueJob.all.reverse
     res_msg = @queue_jobs.present? ? "Jobs found successfully" : "No job is available in DB"
     render json: {success: true, message: res_msg, count: @queue_jobs.count, data: @queue_jobs.as_json}
   end
 
+  # desc                  Create queue Jobs with priorities
+  # route                 POST  /api/v1/queue_jobs
+  # Access                Private
+  # Body                  { "title": "add_movies_title 6", "priority": "high"}
   def create
     @queue_job = QueueJob.new(queue_job_params)
     if @queue_job.save
@@ -16,6 +23,9 @@ class Api::V1::QueueJobsController < ActionController::API
     end
   end
 
+  # Desc                Send Job worker of Queues from API
+  # route               GET /api/v1/queue_jobs/:id/queue_job_worker
+  # Access              Private  
   def queue_job_worker
     priority = @job_to_executed.priority
     priority = priority.parameterize.underscore.to_sym
