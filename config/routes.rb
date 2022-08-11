@@ -4,7 +4,11 @@ Rails.application.routes.draw do
 
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
-      resources :queue_jobs, only: %i[index create show]
+      resources :queue_jobs, only: %i[index create show] do
+        member do
+          get :queue_job_worker, to: 'queue_jobs#queue_job_worker'
+        end
+      end
     end
   end
   
